@@ -16,9 +16,15 @@ repositories {
 }
 
 dependencies {
+
+	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+	runtimeOnly 'org.postgresql:postgresql'
+//	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
+//	runtimeOnly 'com.mysql:mysql-connector-j'
+//	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
 
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

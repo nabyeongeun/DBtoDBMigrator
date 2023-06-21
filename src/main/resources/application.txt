@@ -4,3 +4,11 @@ spring:
     username: scott
     password: 1234
     driverClassName: oracle.jdbc.OracleDriver
+  dest:
+    dataSource:
+      url: jdbc:postgresql://localhost:5432/postgres
+      username: postgres
+      password: 1234
+      driverClassName: org.postgresql.Driver
+
+logging.level.root: INFO
