@@ -4,16 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 
 @Slf4j
-public class PersonItemProcessor implements ItemProcessor<Person, Person> {
+public class PersonItemProcessor implements ItemProcessor<Sample, Sample> {
     @Override
-    public Person process(Person person) throws Exception {
-        final String firstName = person.getFirstName().toUpperCase();
-        final String lastName = person.getLastName().toUpperCase();
+    public Sample process(Sample sample) {
+        final Long sampleKey = sample.getSampleKey();
+        final String sampleData = sample.getSampleData();
 
-        final Person transformedPerson = new Person(firstName, lastName);
+        final Sample convertedSample = new Sample(sampleKey, sampleData);
 
-        log.info("Converting (" + person + ") into (" + transformedPerson + ")");
+        log.info("Converting (" + sample + ") into (" + convertedSample + ")");
 
-        return transformedPerson;
+        return convertedSample;
     }
 }

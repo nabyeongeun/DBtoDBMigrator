@@ -12,16 +12,11 @@ import org.springframework.batch.item.database.*;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
@@ -40,25 +35,23 @@ public class BatchConfiguration {
     public PagingQueryProvider provider() throws Exception {
         SqlPagingQueryProviderFactoryBean provider = new SqlPagingQueryProviderFactoryBean();
         provider.setDataSource(source);
-        provider.setSelectClause("first_name, last_name");
-        provider.setFromClause("from people");
+        provider.setSelectClause("sample_key, sample_data");
+        provider.setFromClause("from sample");
 //        provider.setWhereClause("where first_name >= :fisrt_name"); // match variable
-        provider.setSortKeys(Map.of("first_name", Order.ASCENDING));
+        provider.setSortKeys(Map.of("sample_key", Order.ASCENDING));
 
         return provider.getObject();
     }
 
     @Bean
-    public JdbcPagingItemReader<Person> reader() throws Exception {
+    public JdbcPagingItemReader<Sample> reader() throws Exception {
 
-        return new JdbcPagingItemReaderBuilder<Person>()
+        return new JdbcPagingItemReaderBuilder<Sample>()
                 .dataSource(source)
                 .pageSize(pageSize)
                 .queryProvider(provider())
 //                .parameterValues(Map.of("first_name", "Alika")) // match variable
-                .rowMapper(new BeanPropertyRowMapper<>(Person.class))
-//                .maxItemCount()
-//                .maxRows()
+                .rowMapper(new BeanPropertyRowMapper<>(Sample.class))
                 .name("jdbcPagingItemReader")
                 .build();
     }
@@ -69,10 +62,10 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JdbcBatchItemWriter<Person> writer() {
-        return new JdbcBatchItemWriterBuilder<Person>()
+    public JdbcBatchItemWriter<Sample> writer() {
+        return new JdbcBatchItemWriterBuilder<Sample>()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .sql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)")
+                .sql("INSERT INTO sample (sample_key, sample_data) VALUES (:sampleKey, :sampleData)")
                 .dataSource(dest)
                 .build();
     }
@@ -80,7 +73,6 @@ public class BatchConfiguration {
     @Bean
     public Job importUserJob(JobRepository jobRepository, JobCompletionNotificationListener listener, Step step1) {
         return new JobBuilder("importUserJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .flow(step1)
                 .end()
@@ -88,9 +80,9 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager, JdbcBatchItemWriter<Person> writer) throws Exception {
+    public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager, JdbcBatchItemWriter<Sample> writer) throws Exception {
         return new StepBuilder("step1", jobRepository)
-                .<Person, Person> chunk(pageSize, transactionManager)
+                .<Sample, Sample> chunk(pageSize, transactionManager)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer)
