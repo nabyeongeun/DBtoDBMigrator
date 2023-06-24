@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.database.*;
@@ -29,7 +28,7 @@ public class BatchConfiguration {
     @Resource(name = "dest")
     private final DataSource dest;
 
-    public static int pageSize = 10;
+    public static int pageSize = 10000;
 
     @Bean
     public PagingQueryProvider provider() throws Exception {
@@ -57,8 +56,8 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public PersonItemProcessor processor() {
-        return new PersonItemProcessor();
+    public ItemProcessor processor() {
+        return new ItemProcessor();
     }
 
     @Bean
