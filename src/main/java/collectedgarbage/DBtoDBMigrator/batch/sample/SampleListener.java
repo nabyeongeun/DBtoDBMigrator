@@ -1,4 +1,4 @@
-package collectedgarbage.DBtoDBMigrator;
+package collectedgarbage.DBtoDBMigrator.batch.sample;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class JobCompletionNotificationListener implements JobExecutionListener {
+public class SampleListener implements JobExecutionListener {
 
     private final JdbcTemplate jdbcTemplate;
 

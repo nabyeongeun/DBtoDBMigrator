@@ -25,7 +25,6 @@ public class DatabaseConfig {
         dataSource.setJdbcUrl(env.getProperty("spring.source.dataSource.url"));
         dataSource.setUsername(env.getProperty("spring.source.dataSource.username"));
         dataSource.setPassword(env.getProperty("spring.source.dataSource.password"));
-//        dataSource.setMaximumPoolSize(20);
 
         log.info("Source Connection is Ready");
 
@@ -40,7 +39,6 @@ public class DatabaseConfig {
         dataSource.setJdbcUrl(env.getProperty("spring.dest.dataSource.url"));
         dataSource.setUsername(env.getProperty("spring.dest.dataSource.username"));
         dataSource.setPassword(env.getProperty("spring.dest.dataSource.password"));
-//        dataSource.setMaximumPoolSize(20);
 
         log.info("Destination Connection is Ready");
 

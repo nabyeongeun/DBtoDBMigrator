@@ -30,7 +30,6 @@
     <logger name="jdbc.connection" level="DEBUG"/>
     <logger name="log4jdbc.debug" level="DEBUG"/>
 
-    <!-- 프로그램에서 적용될 로그 레벨 -->
     <root level="INFO">
         <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT" />

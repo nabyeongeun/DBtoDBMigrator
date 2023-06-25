@@ -1,4 +1,4 @@
-package collectedgarbage.DBtoDBMigrator;
+package collectedgarbage.DBtoDBMigrator.batch.sample2;
 
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +15,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
+
 import javax.sql.DataSource;
 import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
-public class BatchConfiguration {
+public class Sample2Config {
 
     @Resource(name = "source")
     private final DataSource source;
@@ -35,7 +36,7 @@ public class BatchConfiguration {
         SqlPagingQueryProviderFactoryBean provider = new SqlPagingQueryProviderFactoryBean();
         provider.setDataSource(source);
         provider.setSelectClause("sample_key, sample_data");
-        provider.setFromClause("from sample");
+        provider.setFromClause("from sample2");
 //        provider.setWhereClause("where first_name >= :fisrt_name"); // match variable
         provider.setSortKeys(Map.of("sample_key", Order.ASCENDING));
 
@@ -43,26 +44,26 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JdbcPagingItemReader<Sample> reader() throws Exception {
+    public JdbcPagingItemReader<Sample2> reader() throws Exception {
 
-        return new JdbcPagingItemReaderBuilder<Sample>()
+        return new JdbcPagingItemReaderBuilder<Sample2>()
                 .dataSource(source)
                 .pageSize(pageSize)
                 .queryProvider(provider())
 //                .parameterValues(Map.of("first_name", "Alika")) // match variable
-                .rowMapper(new BeanPropertyRowMapper<>(Sample.class))
+                .rowMapper(new BeanPropertyRowMapper<>(Sample2.class))
                 .name("jdbcPagingItemReader")
                 .build();
     }
 
     @Bean
-    public ItemProcessor processor() {
-        return new ItemProcessor();
+    public Sample2Processor processor() {
+        return new Sample2Processor();
     }
 
     @Bean
-    public JdbcBatchItemWriter<Sample> writer() {
-        return new JdbcBatchItemWriterBuilder<Sample>()
+    public JdbcBatchItemWriter<Sample2> writer() {
+        return new JdbcBatchItemWriterBuilder<Sample2>()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
                 .sql("INSERT INTO sample (sample_key, sample_data) VALUES (:sampleKey, :sampleData)")
                 .dataSource(dest)
@@ -70,8 +71,8 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Job importUserJob(JobRepository jobRepository, JobCompletionNotificationListener listener, Step step1) {
-        return new JobBuilder("importUserJob", jobRepository)
+    public Job sample2Job(JobRepository jobRepository, Sample2Listener listener, Step step1) {
+        return new JobBuilder("sample2", jobRepository) // edit job name for new job
                 .listener(listener)
                 .flow(step1)
                 .end()
@@ -79,12 +80,13 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager, JdbcBatchItemWriter<Sample> writer) throws Exception {
+    public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager, JdbcBatchItemWriter<Sample2> writer) throws Exception {
         return new StepBuilder("step1", jobRepository)
-                .<Sample, Sample> chunk(pageSize, transactionManager)
+                .<Sample2, Sample2> chunk(pageSize, transactionManager)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer)
                 .build();
     }
+
 }
