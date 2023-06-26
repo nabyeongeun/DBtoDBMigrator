@@ -70,7 +70,7 @@ public class SampleConfig {
     }
 
     @Bean
-    public Job sampleJob(JobRepository jobRepository, SampleListener listener, Step step1) {
+    public Job sample(JobRepository jobRepository, SampleListener listener, Step step1) {
         return new JobBuilder("sample", jobRepository)
                 .listener(listener)
                 .flow(step1)
