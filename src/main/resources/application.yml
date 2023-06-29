@@ -1,0 +1,13 @@
+spring:
+  source:
+    dataSource:
+      url: jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl
+      username: scott
+      password: 1234
+      driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  dest:
+    dataSource:
+      url: jdbc:log4jdbc:postgresql://localhost:5432/postgres
+      username: postgres
+      password: 1234
+      driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy

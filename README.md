@@ -7,7 +7,7 @@ DBtoDBMigrator는 SpringBatch를 이용하여 두 개의 데이터베이스에 �
 아래 절차를 따라서 기본 구성을 설정하세요.
 
 1. build.gradle에 적용하려는 RDBMS의 dependency를 추가하세요
-2. application.txt를 application.yml로 변경하고 데이터베이스 접속정보를 설정하세요.
+2. application.yml에 데이터베이스 접속정보를 기입하세요.
 3. SourceDB의 target테이블을 DestinationDB에 동일하게 생성하세요.
 4. Sample.java 수정하여 Target테이블에 대응하도록 합니다.
 5. Source DB에 Spring Batch Metadata table을 생성하세요.
@@ -28,7 +28,7 @@ Theoretically, it can support all RDBMS supported by Spring Framework, but it ha
 Follow the steps below to set up a basic configuration.
 
 1. Add the RDBMS dependencies you want to apply to build.gradle
-2. Change application.txt to application.yml and set the database connection information.
+2. Set database connection information to application.yml
 3. Create the same target table in SourceDB in DestinationDB.
 4. Modify Sample.java to correspond to Target table.
 5. Create Spring Batch Metadata tables to source DB.
